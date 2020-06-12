@@ -2,11 +2,7 @@
   <div>首页</div>
 </template>
 <script>
-export default {
-  created(){
-
-  },
-};
+export default {};
 </script>
 <style scoped>
 </style>
