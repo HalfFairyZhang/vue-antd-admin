@@ -1,4 +1,6 @@
 import { Menu, Icon } from "ant-design-vue"
+import { isExternal } from '@/utils/validate'
+import path from 'path'
 
 const { Item, SubMenu } = Menu
 
@@ -32,6 +34,15 @@ export default {
             cachedOpenKeys: []
         }
     },
+    computed: {
+        rootSubmenuKeys: (vm) => {
+            let keys = []
+            vm.menuData.forEach(item => {
+                keys.push(item.path)
+            })
+            return keys
+        }
+    },
     created() {
         this.updateMenu()
     },
@@ -49,20 +60,28 @@ export default {
         }
     },
     methods: {
+        resolvePath(basePath, routePath) {
+            if (isExternal(routePath)) {
+                return routePath
+            }
+            if (isExternal(basePath)) {
+                return basePath
+            }
+            return path.resolve(basePath, routePath)
+        },
         renderIcon: function (h, icon) {
-            console.log(icon)
             return icon == undefined ? null : h(Icon, { props: { type: icon } })
         },
-        renderMenuItem: function (h, menu, pIndex, index) {
+        renderMenuItem: function (h, basePath, menu, pIndex, index) {
             return h(
                 Item,
                 {
-                    key: menu.path ? menu.path : 'item_' + pIndex + '_' + index
+                    key: menu.path ? (basePath ? this.resolvePath(basePath, menu.path) : menu.path) : 'item_' + pIndex + '_' + index
                 },
                 [
                     h(
                         'a',
-                        { attrs: { href: '#' + menu.path } },
+                        { attrs: { href: '#' + (basePath ? this.resolvePath(basePath, menu.path) : menu.path) } },
                         [
                             this.renderIcon(h, menu.meta.icon),
                             h('span', [menu.meta.title])
@@ -83,7 +102,7 @@ export default {
             var itemArr = []
             var pIndex_ = pIndex + '_' + index
             menu.children.forEach(function (item, i) {
-                itemArr.push(vm.renderItem(h, item, pIndex_, i))
+                itemArr.push(vm.renderItem(h, menu.path, item, pIndex_, i))
             })
             return h(
                 SubMenu,
@@ -95,13 +114,13 @@ export default {
             var vm = this
             var menuArr = []
             menuTree.forEach(function (menu, i) {
-                menuArr.push(vm.renderItem(h, menu, '0', i))
+                menuArr.push(vm.renderItem(h, undefined, menu, '0', i))
             })
             return menuArr
         },
-        renderItem(h, menu, pIndex, index) {
+        renderItem(h, basePath = undefined, menu, pIndex, index) {
             if (!menu.hidden) {
-                return menu.children ? this.renderSubMenu(h, menu, pIndex, index) : this.renderMenuItem(h, menu, pIndex, index)
+                return menu.children ? this.renderSubMenu(h, menu, pIndex, index) : this.renderMenuItem(h, basePath, menu, pIndex, index)
             }
         },
         onOpenChange(openKeys) {
@@ -115,11 +134,12 @@ export default {
         updateMenu() {
             let routes = this.$route.matched.concat()
             this.selectedKeys = [routes.pop().path]
+            console.log(this.selectedKeys)
             let openKeys = []
             routes.forEach((item) => {
                 openKeys.push(item.path)
             })
-            this.collapsed || this.mode === 'horizontal' ? this.cachedOpenKeys = openKeys : this.openKeys = openKeys
+            this.collapsed ? this.cachedOpenKeys = openKeys : this.openKeys = openKeys
         }
     },
     render(h) {
@@ -128,7 +148,9 @@ export default {
             props: {
                 mode: this.$props.mode,
                 theme: this.$props.theme,
-                inlineCollapsed: this.$props.collapsed
+                inlineCollapsed: this.$props.collapsed,
+                openKeys: this.openKeys,
+                selectedKeys: this.selectedKeys
             },
             on: {
                 openChange: this.onOpenChange,

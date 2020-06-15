@@ -30,20 +30,21 @@ export const constantRoutes = [
     {
         path: '/',
         component: Layout,
-        meta: { title: 'Dashboard', icon: 'dashboard', affix: true },
-        redirect: '/dashboard',
+        meta: { title: '工作台', icon: 'dashboard', affix: true },
         children: [
             {
                 path: 'dashboard',
                 component: () => import('@/views/dashboard/index'),
                 name: 'Dashboard',
-                meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
+                meta: { title: '仪表盘', icon: 'documentation', affix: true }
             }
         ]
-    }, {
+    },
+    {
         path: '/documentation',
         component: Layout,
-        meta: { title: 'Documentation', icon: 'documentation', affix: true },
+        redirect: 'noRedirect',
+        meta: { title: '文档', icon: 'dashboard', affix: true },
         children: [
             {
                 path: 'index',
@@ -62,15 +63,15 @@ export const asyncRoutes = [
         redirect: 'noRedirect',
         name: 'ErrorPages',
         meta: {
-            title: 'Error Pages',
+            title: '错误页面',
             icon: '404'
         },
         children: [
             {
                 path: '500',
                 component: () => import('@/views/error-page/500'),
-                name: 'Page401',
-                meta: { title: '401', noCache: true }
+                name: 'Page500',
+                meta: { title: '500', noCache: true }
             },
             {
                 path: '404',
@@ -80,6 +81,24 @@ export const asyncRoutes = [
             }
         ]
     },
+    {
+        path: '/user',
+        component: Layout,
+        redirect: 'noRedirect',
+        name: 'user',
+        meta: {
+            title: '用户管理',
+            icon: 'user'
+        },
+        children: [
+            {
+                path: 'index',
+                component: () => import('@/views/user/index'),
+                name: 'user',
+                meta: { title: '用户信息', noCache: true }
+            },
+        ]
+    }
 ]
 
 const createRouter = () => new Router({

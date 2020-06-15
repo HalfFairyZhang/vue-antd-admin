@@ -3,6 +3,7 @@
     <span class="ant-vue-global-header-trigger" @click="toggleSideBar">
       <a-icon class="trigger" :type="sidebar.opened?'menu-fold':'menu-unfold'" />
     </span>
+    <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
     <div style="flex: 1 1 0%;"></div>
     <div class="antd-vue-components-global-header-index-right">
       <a-dropdown>
@@ -27,9 +28,13 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from "vuex";
+import Breadcrumb from '@/components/Breadcrumb'
 
 export default {
+  components: {
+    Breadcrumb
+  },
   computed: {
     ...mapGetters(["sidebar", "avatar", "device"])
   },
@@ -94,5 +99,9 @@ export default {
   span {
   color: rgba(0, 0, 0, 0.65);
   vertical-align: middle;
+}
+
+.breadcrumb-container {
+  float: left;
 }
 </style>

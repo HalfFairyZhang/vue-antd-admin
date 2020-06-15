@@ -7,6 +7,7 @@
       <a-layout>
         <a-layout-header style="padding: 0px; width: 100%; z-index: 9;">
           <navbar />
+          
         </a-layout-header>
         <a-layout-content>
           <app-main />

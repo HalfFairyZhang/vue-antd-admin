@@ -1,5 +1,6 @@
 <template>
-  <div>首页</div>
+  <div>Documentation
+</div>
 </template>
 <script>
 export default {};

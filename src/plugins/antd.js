@@ -1,5 +1,14 @@
 import Vue from 'vue'
-import { Layout, Menu, Icon, Dropdown, Avatar, Button, Result, Form, Input, FormModel, Checkbox } from 'ant-design-vue';
+import {
+    Layout, Menu,
+    Icon, Dropdown,
+    Avatar, Button,
+    Result, Form,
+    Input, FormModel,
+    Checkbox, Breadcrumb,
+    Pagination, ConfigProvider,
+    Table, Card, Divider
+} from 'ant-design-vue';
 
 Vue.use(Layout);
 Vue.use(Menu);
@@ -12,3 +21,9 @@ Vue.use(Input);
 Vue.use(FormModel);
 Vue.use(Form);
 Vue.use(Checkbox);
+Vue.use(Breadcrumb);
+Vue.use(Pagination);
+Vue.use(ConfigProvider);
+Vue.use(Table);
+Vue.use(Card);
+Vue.use(Divider);
