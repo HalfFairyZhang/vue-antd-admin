@@ -156,9 +156,6 @@ export default {
 };
 </script>
 <style scoped>
-.ant-modal-form {
-    
-}
 .ant-modal-form .ant-form-item {
   display: flex;
 }
