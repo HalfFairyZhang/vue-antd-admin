@@ -134,7 +134,6 @@ export default {
         updateMenu() {
             let routes = this.$route.matched.concat()
             this.selectedKeys = [routes.pop().path]
-            console.log(this.selectedKeys)
             let openKeys = []
             routes.forEach((item) => {
                 openKeys.push(item.path)

@@ -26,7 +26,7 @@ const users = {
 export default [
   // user login
   {
-    url: '/vue-element-admin/user/login',
+    url: '/vue-antd-admin/user/login',
     type: 'post',
     response: config => {
       const { username } = config.body
@@ -36,7 +36,7 @@ export default [
       if (!token) {
         return {
           code: 60204,
-          message: 'Account and password are incorrect.'
+          message: '帐户和密码不正确.'
         }
       }
 
@@ -49,7 +49,7 @@ export default [
 
   // get user info
   {
-    url: '/vue-element-admin/user/info\.*',
+    url: '/vue-antd-admin/user/info.*',
     type: 'get',
     response: config => {
       const { token } = config.query
@@ -59,7 +59,7 @@ export default [
       if (!info) {
         return {
           code: 50008,
-          message: 'Login failed, unable to get user details.'
+          message: '登录失败，无法获取用户详细信息.'
         }
       }
 
@@ -72,9 +72,9 @@ export default [
 
   // user logout
   {
-    url: '/vue-element-admin/user/logout',
+    url: '/vue-antd-admin/user/logout',
     type: 'post',
-    response: _ => {
+    response: () => {
       return {
         code: 20000,
         data: 'success'

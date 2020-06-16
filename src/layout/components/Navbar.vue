@@ -10,18 +10,22 @@
         <span
           class="antd-vue-components-global-header-index-action antd-vue-components-global-header-index-account"
         >
-          <a-avatar class="antd-vue-components-global-header-index-avatar" icon="user" />
-          <span class="antd-vue-components-global-header-index-name">Serati Ma</span>
+          <a-avatar
+            class="antd-vue-components-global-header-index-avatar"
+            :src="avatar"
+            icon="user"
+          />
+          <span class="antd-vue-components-global-header-index-name">{{name}}</span>
         </span>
         <a-menu slot="overlay">
           <a-menu-item key="0">
             <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">个人中心</a>
           </a-menu-item>
           <a-menu-item key="1">
-            <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">个人设置</a>
+            <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">设置</a>
           </a-menu-item>
           <a-menu-divider />
-          <a-menu-item key="3">退出登录</a-menu-item>
+          <a-menu-item key="3" @click.native="logout">退出登录</a-menu-item>
         </a-menu>
       </a-dropdown>
     </div>
@@ -29,18 +33,23 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
-import Breadcrumb from '@/components/Breadcrumb'
+import Breadcrumb from "@/components/Breadcrumb";
 
 export default {
   components: {
     Breadcrumb
   },
   computed: {
-    ...mapGetters(["sidebar", "avatar", "device"])
+    ...mapGetters(["sidebar", "avatar", "name"])
   },
   methods: {
     toggleSideBar() {
       this.$store.dispatch("app/toggleSideBar");
+    },
+    async logout() {
+      await this.$store.dispatch("user/logout");
+      console.log(this.$route.fullPath);
+      this.$router.push(`/login?redirect=${this.$route.fullPath}`);
     }
   }
 };

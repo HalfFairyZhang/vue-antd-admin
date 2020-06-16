@@ -2,15 +2,15 @@ import Mock from 'mockjs'
 import { param2Obj } from '../src/utils'
 
 import user from './user'
-import role from './role'
-import article from './article'
-import search from './remote-search'
+// import role from './role'
+// import article from './article'
+// import search from './remote-search'
 
 const mocks = [
   ...user,
-  ...role,
-  ...article,
-  ...search
+  // ...role,
+  // ...article,
+  // ...search
 ]
 
 // for front mock
@@ -50,6 +50,7 @@ export function mockXHR() {
   }
 
   for (const i of mocks) {
+    console.log(i)
     Mock.mock(new RegExp(i.url), i.type || 'get', XHR2ExpressReqWrap(i.response))
   }
 }

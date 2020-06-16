@@ -1,42 +1,43 @@
 <template>
-  <a-table :columns="columns" bordered :data-source="data" :loading="loading" :pagination="false">
-    <template slot="action" slot-scope="record, index">
-      <a href="javascript:;" @click="operationHandel(record,index)">详情</a>
-      <a-divider type="vertical" />
-      <a href="javascript:;" @click="operationHandel(record,index)">编辑</a>
-      <a-divider type="vertical" />
-      <a href="javascript:;" @click="operationHandel(record,index)">删除</a>
-    </template>
-  </a-table>
+  <div>
+    <div class="operator">
+      <a-button
+        v-for="btn in operationBtns.filter(item=>{return item.pos=='top'})"
+        :key="btn.key"
+        :type="btn.type?btn.type:'default'"
+        :style="{marginLeft:'8px'}"
+        @click="operationHandel(record,btn.key)"
+      >{{btn.label}}</a-button>
+    </div>
+    <a-table :columns="columns" bordered :data-source="data" :loading="loading" :pagination="false">
+      <template slot="action" slot-scope="record">
+        <span
+          v-for="(btn,index) in operationBtns.filter(item=>{return item.pos=='row'})"
+          :key="btn.key"
+        >
+          <a-divider v-if="index!=0" type="vertical" />
+          <a @click="operationHandel(record,btn.key)">{{btn.label}}</a>
+        </span>
+      </template>
+    </a-table>
+  </div>
 </template>
 <script>
 import moment from "moment"; // 这个moment方法。框架里本来就有引入就好
 
 export default {
   props: {
+    operationBtns: {
+      type: Array,
+      default: () => []
+    },
     tableCols: {
       required: true,
       type: Array
     },
     tableDatas: {
-      required: true,
-      type: Array
-    },
-    pagination: {
-      type: [Object, Boolean],
-      default: () => ({
-        pageSize: 10,
-        current: 1
-      })
-    }
-  },
-  computed: {
-    columnsCustom() {
-      return this.columns
-        .filter(item => {
-          return item.scopedSlots;
-        })
-        .map(item => item.scopedSlots);
+      type: Array,
+      default: () => []
     }
   },
   data() {
@@ -45,9 +46,6 @@ export default {
       data: this.tableDatas,
       loading: false
     };
-  },
-  mounted() {
-    this.requestData();
   },
   created() {
     this.tableCols.forEach(item => {
@@ -66,7 +64,6 @@ export default {
           ...{ key: "action", scopedSlots: { customRender: "action" } }
         };
       }
-      console.log(column);
       this.columns.push(column);
     });
   },
@@ -80,14 +77,14 @@ export default {
       });
       return data ? data.label : "";
     },
-    requestData() {},
-    operationHandel(events, record, index) {
-      console.log(events);
-      console.log(record);
-      console.log(index);
+    operationHandel(record, key) {
+      this.$emit("operationHandel", record, key);
     }
   }
 };
 </script>
 <style scoped>
+.operator {
+  margin-bottom: 18px;
+}
 </style>

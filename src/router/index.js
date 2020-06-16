@@ -3,6 +3,12 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
+const VueRouterPush = Router.prototype.push
+Router.prototype.push = function push(location, onResolve, onReject) {
+    if (onResolve || onReject) return VueRouterPush.call(this, location, onResolve, onReject)
+    return VueRouterPush.call(this, location).catch(err => err)
+}
+
 /* Layout */
 import Layout from '@/layout'
 
@@ -31,6 +37,7 @@ export const constantRoutes = [
         path: '/',
         component: Layout,
         meta: { title: '工作台', icon: 'dashboard', affix: true },
+        redirect: 'dashboard',
         children: [
             {
                 path: 'dashboard',
@@ -44,7 +51,7 @@ export const constantRoutes = [
         path: '/documentation',
         component: Layout,
         redirect: 'noRedirect',
-        meta: { title: '文档', icon: 'dashboard', affix: true },
+        meta: { title: '文档', icon: 'snippets', affix: true },
         children: [
             {
                 path: 'index',
@@ -64,7 +71,7 @@ export const asyncRoutes = [
         name: 'ErrorPages',
         meta: {
             title: '错误页面',
-            icon: '404'
+            icon: 'warning'
         },
         children: [
             {

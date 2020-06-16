@@ -7,7 +7,10 @@ import {
     Input, FormModel,
     Checkbox, Breadcrumb,
     Pagination, ConfigProvider,
-    Table, Card, Divider
+    Table, Card, Divider,
+    Col, Row, DatePicker,
+    Select, TreeSelect,
+    Popconfirm, Modal, Message
 } from 'ant-design-vue';
 
 Vue.use(Layout);
@@ -27,3 +30,14 @@ Vue.use(ConfigProvider);
 Vue.use(Table);
 Vue.use(Card);
 Vue.use(Divider);
+Vue.use(Col);
+Vue.use(Row);
+Vue.use(DatePicker);
+Vue.use(Select);
+Vue.use(TreeSelect);
+Vue.use(Modal);
+Vue.use(Popconfirm);
+Vue.use()
+
+Vue.prototype.$message = Message;
+Vue.prototype.$confirm = Modal.confirm;

@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import pathToRegexp from "path-to-regexp";
+import { pathToRegexp } from "path-to-regexp";
 
 export default {
   data() {
@@ -64,7 +64,7 @@ export default {
       return toPath(params);
     },
     handleLink(item) {
-      console.log(item)
+      console.log(item);
       const { redirect, path } = item;
       if (!path) return;
       if (redirect) {
