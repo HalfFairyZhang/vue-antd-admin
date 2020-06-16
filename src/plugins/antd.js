@@ -37,7 +37,6 @@ Vue.use(Select);
 Vue.use(TreeSelect);
 Vue.use(Modal);
 Vue.use(Popconfirm);
-Vue.use()
 
 Vue.prototype.$message = Message;
 Vue.prototype.$confirm = Modal.confirm;
