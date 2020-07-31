@@ -5,16 +5,17 @@ import { getToken } from '@/utils/auth'
 
 // 创建axios实例
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  // withCredentials: true, // 跨域请求时发送cookies
-  timeout: 5000 // 超时时间
+  baseURL: "", //process.env.VUE_APP_BASE_API, // url = base url + request url
+  withCredentials: true, // 跨域请求时发送cookies
+  timeout: 5000, // 超时时间
+  headers	:{'Content-Type': 'application/json;charset=UTF-8'},
 })
 
 // request 拦截器（发出请求前处理）
 service.interceptors.request.use(
   config => {
     if (store.getters.token) {
-      config.headers['X-Token'] = getToken()
+      config.headers['Authorization'] = getToken()
     }
     return config
   },
@@ -28,12 +29,12 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   response => {
     const res = response.data
-
+    console.log(res)
     // 状态码判定
-    if (res.code !== 20000) {
-      Message.error(res.message || 'Error', 5 * 1000)
+    if (res.code !== 200) {
+      Message.error(res.msg || 'Error', 5 * 1000)
       // 50008: 非法令牌; 50012: 其他客户端登录; 50014: 令牌过期;
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
+      if (res.code === 401 || res.code === 403) {
         Modal.confirm('您已注销，您可以取消以停留在此页，或重新登录', '确认注销', {
           confirmButtonText: '重新登录',
           cancelButtonText: '取消',
@@ -44,14 +45,14 @@ service.interceptors.response.use(
           })
         })
       }
-      return Promise.reject(new Error(res.message || 'Error'))
+      return Promise.reject(new Error(res.msg || 'Error'))
     } else {
       return res
     }
   },
   error => {
     console.log('err' + error) // for debug
-    Message.error(error.message, 5 * 1000)
+    Message.error(error.msg, 5 * 1000)
     return Promise.reject(error)
   }
 )

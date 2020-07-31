@@ -7,8 +7,8 @@ import "./plugins/antd.js";
 import './permission' // permission control
 import { hasBtnPermission } from './utils/permission'
 
-const { mockXHR } = require('../mock')
-mockXHR()
+// const { mockXHR } = require('../mock')
+// mockXHR()
 
 Vue.config.productionTip = false
 Vue.prototype.hasPerm = hasBtnPermission

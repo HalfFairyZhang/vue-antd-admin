@@ -5,14 +5,25 @@ module.exports = {
     outputDir: 'dist',
     assetsDir: 'static',
     devServer: {
-        port: port,
+        host: "0.0.0.0",
+        port: 8081,
         open: true,
+        https: false,
+        hotOnly: false,
         overlay: {
             warnings: false,
             errors: true
         },
+        proxy: {
+            "/web-api": {
+              target: "http://localhost:8020/web-api",
+              changeOrigin: true,
+              pathRewrite: { "^/web-api": "" },
+            }
+        },
         // before: require('./mock/mock-server.js')
     },
+    
     css: {
         loaderOptions: {
             less: {
