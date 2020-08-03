@@ -5,13 +5,13 @@ import router from './router'
 import store from './store'
 import "./plugins/antd.js";
 import './permission' // permission control
-import { hasBtnPermission } from './utils/permission'
+import { hasPermission } from './utils/permission'
 
 // const { mockXHR } = require('../mock')
 // mockXHR()
 
 Vue.config.productionTip = false
-Vue.prototype.hasPerm = hasBtnPermission
+Vue.prototype.hasPerm = hasPermission
 
 new Vue({
   router,

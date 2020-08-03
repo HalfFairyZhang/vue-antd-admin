@@ -17,5 +17,6 @@ module.exports = {
         "vue"
     ],
     "rules": {
+        "no-unused-vars": 'off' //参数未使用报警处理
     }
 };

@@ -53,7 +53,11 @@
       <a-row :style="{ textAlign: 'right' }">
         <a-button type="primary" @click="handleSearch">查询</a-button>
         <a-button :style="{ marginLeft: '8px' }" @click="handleReset">重置</a-button>
-        <a :style="{ marginLeft: '8px', fontSize: '12px' }" @click="toggle">
+        <a
+          v-if="this.searchDatas.length>3"
+          :style="{ marginLeft: '8px', fontSize: '12px' }"
+          @click="toggle"
+        >
           {{expand?'收起':'展开'}}
           <a-icon :type="expand ? 'up' : 'down'" />
         </a>
@@ -72,24 +76,24 @@ export default {
       default: () => [
         {
           key: "demo1",
-          label: "普通输入框"
+          label: "普通输入框",
         },
         {
           key: "demo2",
           type: "number",
-          label: "数字输入框"
+          label: "数字输入框",
         },
         {
           key: "demo3",
           type: "dateTime",
-          label: "日期选择器"
+          label: "日期选择器",
         },
         {
           key: "demo4",
           type: "dateTime",
           showTime: true,
           format: "YYYY/MM/DD HH:mm",
-          label: "时间选择器"
+          label: "时间选择器",
         },
         {
           key: "demo5",
@@ -98,39 +102,39 @@ export default {
           selectData: [
             {
               label: "数据一",
-              value: 1
+              value: 1,
             },
             {
               label: "数据二",
-              value: 2
-            }
-          ]
-        }
-      ]
+              value: 2,
+            },
+          ],
+        },
+      ],
     },
     hidden: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   computed: {
     count() {
       return this.expand ? this.searchDatas.length : 3;
-    }
+    },
   },
   data() {
     return {
       expand: false,
       form: {},
       selectOptions: {},
-      cascaderOptions: {}
+      cascaderOptions: {},
     };
   },
   created() {
-    var selectItems = this.searchDatas.filter(item => {
+    var selectItems = this.searchDatas.filter((item) => {
       return item.type == "select";
     });
-    selectItems.forEach(obj => {
+    selectItems.forEach((obj) => {
       if (obj.selectData) {
         Vue.set(this.selectOptions, obj.key, obj.selectData);
       } else if (!obj.isSub) {
@@ -140,11 +144,11 @@ export default {
   },
   methods: {
     selectChange(val, obj) {
-      var childrenObj = this.searchDatas.find(item => {
+      var childrenObj = this.searchDatas.find((item) => {
         item.key == obj.childrenKey;
       });
       if (childrenObj.defaultParams) {
-        Object.getOwnPropertyNames(childrenObj.defaultParams).forEach(key => {
+        Object.getOwnPropertyNames(childrenObj.defaultParams).forEach((key) => {
           childrenObj.defaultParams[key] = val;
         });
       }
@@ -164,15 +168,15 @@ export default {
       targetOption.loading = true;
     },
     handleSearch() {
-      this.$emit("handleSearch", this.form);
+      this.$emit("searchhandle", this.form);
     },
     handleReset() {
       this.form = {};
     },
     toggle() {
       this.expand = !this.expand;
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>

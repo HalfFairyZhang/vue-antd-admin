@@ -1,59 +1,88 @@
-import { asyncRoutes,constantRoutes } from '@/router'
+import { constantRoutes } from '@/router'
+import Layout from '@/layout'
+
+const notFound = { path: '*', redirect: '/404', hidden: true }
 
 /**
- * Use meta.role to determine if the current user has permission
- * @param roles
- * @param route
+ * 根据菜单生成路由
+ * @param {} menus 
+ * @param {*} depth 
  */
-function hasPermission(roles, route) {
-  if (route.meta && route.meta.roles) {
-    return roles.some(role => route.meta.roles.includes(role))
-  } else {
-    return true
-  }
+export function filterAsyncRoutes(menus, depth = 0) {
+  var res = []
+  menus.forEach(menu => {
+    var modulePath = depth == 0 ? `/${menu.url}` : menu.url;
+    var tmp = {
+      path: modulePath || "default",
+      name: menu.url,
+      meta: { title: menu.name, icon: menu.icon, index: '1-1' },
+      component: () => import(`@/views/${menu.page}`),
+      hidden: menu.type === 1
+    }
+    if (!menu.page) {
+      tmp['component'] = Layout
+    }
+    if (menu.children && depth < 1) {
+      tmp['children'] = filterAsyncRoutes(menu.children, depth + 1)
+    }
+    res.push(tmp)
+    if (menu.children && depth == 1) {
+      res = res.concat(filterAsyncRoutes(menu.children.filter(item => item.url != null), depth + 1))
+    }
+  });
+  return res;
 }
 
 /**
- * Filter asynchronous routing tables by recursion
- * @param routes asyncRoutes
- * @param roles
+ * 过滤出所有权限
+ * @param {} menus 
  */
-export function filterAsyncRoutes(routes, roles) {
-  const res = []
-
-  routes.forEach(route => {
-    const tmp = { ...route }
-    if (hasPermission(roles, tmp)) {
-      if (tmp.children) {
-        tmp.children = filterAsyncRoutes(tmp.children, roles)
+export function filterPermissions(menus) {
+  var res = []
+  menus.forEach(menu => {
+    if (menu.children && menu.type != 1) {
+      res = res.concat(filterPermissions(menu.children))
+    } else {
+      if (menu.perms) {
+        var perms = menu.perms.split(',')
+        res = res.concat(perms)
       }
-      res.push(tmp)
     }
-  })
-
-  return res
+  });
+  return res;
 }
 
 const state = {
   routes: [],
+  perms: [],
   addRoutes: []
 }
 
 const mutations = {
   SET_ROUTES: (state, routes) => {
     state.addRoutes = routes
-    console.log(constantRoutes)
     state.routes = constantRoutes.concat(routes)
+  },
+  SET_PERMS: (state, perms) => {
+    state.perms = perms
   }
 }
 
 const actions = {
-  generateRoutes({ commit }, roles) {
+  generateRoutes({ commit }, menus) {
     return new Promise(resolve => {
-      var accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
+      var accessedRoutes = filterAsyncRoutes(menus)
+      accessedRoutes.push(notFound)
+      var perms = filterPermissions(menus);
+      perms = perms.filter((item, index) => perms.indexOf(item) === index);
       commit('SET_ROUTES', accessedRoutes)
+      commit('SET_PERMS', perms)
       resolve(accessedRoutes)
     })
+  },
+  resetPermissions({ commit }) {
+    commit('SET_ROUTES', [])
+    commit('SET_PERMS', [])
   }
 }
 

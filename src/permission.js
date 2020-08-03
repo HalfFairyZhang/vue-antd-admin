@@ -19,10 +19,9 @@ router.beforeEach(async (to, from, next) => {
             } else {
                 try {
                     await store.dispatch('user/getInfo')
-                    const roles = await store.dispatch('menu/queryUserMenu', {})
-                    const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
+                    const menus = await store.dispatch('menu/queryUserMenuList')
+                    const accessRoutes = await store.dispatch('permission/generateRoutes', menus)
                     router.addRoutes(accessRoutes)
-                    console.log(to)
                     next({ ...to, replace: true })
                 } catch (error) {
                     await store.dispatch('user/resetToken')

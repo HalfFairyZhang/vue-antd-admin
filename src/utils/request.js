@@ -5,7 +5,7 @@ import { getToken } from '@/utils/auth'
 
 // 创建axios实例
 const service = axios.create({
-  baseURL: "", //process.env.VUE_APP_BASE_API, // url = base url + request url
+  baseURL: "/web-api", //process.env.VUE_APP_BASE_API, // url = base url + request url
   withCredentials: true, // 跨域请求时发送cookies
   timeout: 5000, // 超时时间
   headers	:{'Content-Type': 'application/json;charset=UTF-8'},
@@ -29,7 +29,6 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   response => {
     const res = response.data
-    console.log(res)
     // 状态码判定
     if (res.code !== 200) {
       Message.error(res.msg || 'Error', 5 * 1000)
@@ -52,7 +51,7 @@ service.interceptors.response.use(
   },
   error => {
     console.log('err' + error) // for debug
-    Message.error(error.msg, 5 * 1000)
+    Message.error("服务器异常", 5 * 1000)
     return Promise.reject(error)
   }
 )

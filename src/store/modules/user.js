@@ -1,11 +1,11 @@
-import { login, getInfo, logout } from '@/api/user'
+import { login, getInfo, logout, queryList, queryInfo, saveUser, updateUser, deleteUser } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
 const state = {
     token: getToken(),
     name: '',
-    avatar: '',
+    avatar: ''
 }
 
 const mutations = {
@@ -17,18 +17,15 @@ const mutations = {
     },
     SET_AVATAR: (state, avatar) => {
         state.avatar = avatar
-    }
+    },
 }
 
 const actions = {
     login({ commit }, params) {
-        console.log("login")
         const { username, password } = params;
         return new Promise((resolve, reject) => {
             login({ username: username.trim(), password: password.trim() }).then(response => {
-                console.log(response)
                 const { data } = response
-                console.log(data)
                 commit('SET_TOKEN', data.token)
                 setToken(data.token)
                 resolve();
@@ -53,12 +50,11 @@ const actions = {
             })
         })
     },
-    // user logout
     logout({ commit, state }) {
         return new Promise((resolve, reject) => {
             logout(state.token).then(() => {
                 commit('SET_TOKEN', '')
-                // commit('SET_ROLES', [])
+                commit('menu/SET_ROLES', [], { root: true })
                 removeToken()
                 resetRouter()
                 resolve()
@@ -67,17 +63,34 @@ const actions = {
             })
         })
     },
-    // remove token
     resetToken({ commit }) {
         return new Promise(resolve => {
             commit('SET_TOKEN', '')
-            // commit('SET_ROLES', [])
+            commit('menu/SET_ROLES', [], { root: true })
             removeToken()
             resolve()
         })
     },
+    queryUserList({ commit }, params) {
+        return new Promise(resolve => {
+            queryList(params).then(response => {
+                resolve(response.data)
+            });
+        })
+    },
+    queryInfo({ commit }, id) {
+        return queryInfo(id);
+    },
+    saveUser({ commit }, data) {
+        return saveUser(data);
+    },
+    updateUser({ commit }, data) {
+        return updateUser(data);
+    },
+    deleteUser({ commit }, id) {
+        return deleteUser(id);
+    }
 }
-
 
 export default {
     namespaced: true,

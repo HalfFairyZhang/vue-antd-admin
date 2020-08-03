@@ -5,7 +5,7 @@ import request from '@/utils/request'
  */
 export function login(data) {
   return request({
-    url: '/web-api/account/login',
+    url: '/account/login',
     method: 'post',
     data
   })

@@ -10,7 +10,8 @@ import {
     Table, Card, Divider,
     Col, Row, DatePicker,
     Select, TreeSelect,
-    Popconfirm, Modal, Message
+    Popconfirm, Modal, Message,
+    Switch,Upload
 } from 'ant-design-vue';
 
 Vue.use(Layout);
@@ -37,6 +38,8 @@ Vue.use(Select);
 Vue.use(TreeSelect);
 Vue.use(Modal);
 Vue.use(Popconfirm);
+Vue.use(Switch);
+Vue.use(Upload);
 
 Vue.prototype.$message = Message;
 Vue.prototype.$confirm = Modal.confirm;
