@@ -1,4 +1,4 @@
-import { userMenuList, queryList, queryInfo, saveMenu, updateMenu, deleteMenu } from '@/api/menu'
+import { userMenuList, queryList, querySelect, queryInfo, saveMenu, updateMenu, deleteMenu } from '@/api/menu'
 
 const state = {
     roles: []
@@ -23,11 +23,10 @@ const actions = {
         })
     },
     queryList({ commit }, params) {
-        return new Promise(resolve => {
-            queryList(params).then(response => {
-                resolve(response.data)
-            });
-        })
+        return queryList(params);
+    },
+    querySelect({ commit }, params) {
+        return querySelect(params);
     },
     queryInfo({ commit }, id) {
         return queryInfo(id);

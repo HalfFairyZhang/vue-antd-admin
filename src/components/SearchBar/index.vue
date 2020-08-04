@@ -179,7 +179,7 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style lang="less" scoped>
 .search-bar-container {
   background: #fff;
   padding-bottom: 16px;
@@ -200,5 +200,9 @@ export default {
 
 .ant-advanced-search-form .ant-form-item-control-wrapper {
   flex: 1;
+}
+
+/deep/.ant-form-item {
+  margin-bottom: 16px !important;
 }
 </style>

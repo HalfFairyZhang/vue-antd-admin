@@ -23,6 +23,18 @@ export function queryList(params) {
 }
 
 /**
+ * 菜单下拉列表
+ * @param {参数} params 
+ */
+export function querySelect(params) {
+    return request({
+        url: '/menu/select',
+        method: 'get',
+        params
+    })
+}
+
+/**
  * 菜单信息
  * @param {主键} id 
  */

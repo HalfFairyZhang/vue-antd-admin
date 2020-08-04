@@ -16,14 +16,21 @@ module.exports = {
         },
         proxy: {
             "/web-api": {
-              target: "http://localhost:8020/web-api",
-              changeOrigin: true,
-              pathRewrite: { "^/web-api": "" },
-            }
+                target: "http://localhost:8020/web-api",
+                changeOrigin: true,
+                pathRewrite: { "^/web-api": "" },
+            },
+            '/upload': {
+                target: 'http://localhost:8020/web-api',
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/upload': '/upload'
+                }
+            },
         },
         // before: require('./mock/mock-server.js')
     },
-    
+
     css: {
         loaderOptions: {
             less: {

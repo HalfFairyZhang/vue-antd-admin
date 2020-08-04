@@ -142,6 +142,15 @@ export default {
           key: "email",
           label: "邮箱",
         },
+        {
+          key: "roleIdList",
+          label: "角色",
+          type: "select",
+          multiple:true,
+          selectUrl: "role/querySelect",
+          labelName: "name",
+          valueName: "id",
+        },
       ],
     };
   },
@@ -186,8 +195,11 @@ export default {
       this.initData();
     },
     submitHandel(data) {
-      console.log(data);
-      this.visibleModal = false;
+      this.$store.dispatch("user/saveUser", data).then((res) => {
+        this.$message.success("保存成功！");
+        this.visibleModal = false;
+        this.initData();
+      });
     },
   },
 };

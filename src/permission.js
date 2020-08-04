@@ -25,7 +25,7 @@ router.beforeEach(async (to, from, next) => {
                     next({ ...to, replace: true })
                 } catch (error) {
                     await store.dispatch('user/resetToken')
-                    Message.error(error || 'Has Error')
+                    Message.error(error || 'Has Error', 5)
                     next(`/login?redirect=${to.path}`)
                 }
             }

@@ -7,7 +7,7 @@
     :maskClosable="false"
   >
     <template slot="footer">
-      <a-button key="back" @click="visible=false">取消</a-button>
+      <a-button key="back" @click="handelCancel">取消</a-button>
       <a-button key="submit" type="primary" :loading="loading" @click="submitForm('modalForm')">保存</a-button>
     </template>
     <a-form-model ref="modalForm" :model="modalForm" :rules="modalRules">
@@ -27,26 +27,38 @@
             v-model="modalForm[item.key]"
             :placeholder="`请选择${item.label}`"
             style="width: 195px"
-            @change="selectChange(modalForm[item.key],item)"
           >
             <a-select-option
               v-for="option in selectOptions[item.key]"
-              :key="option.valueName?option[option.valueName]:option.value"
-              :value="option.valueName?option[option.valueName]:option.value"
-            >{{option.labelName?option[option.labelName]:option.label}}</a-select-option>
+              :key="item.valueName?option[item.valueName]:option.value"
+              :value="item.valueName?option[item.valueName]:option.value"
+            >{{item.labelName?option[item.labelName]:option.label}}</a-select-option>
           </a-select>
         </a-form-model-item>
-        <a-form-model-item v-else-if="item.type=='cascader'" :label="item.label" :prop="item.key">
-          <a-cascader
-            :options="cascaderOptions[item.key]"
-            :load-data="loadData"
+        <a-form-model-item v-else-if="item.type=='treeSelect'" :label="item.label" :prop="item.key">
+          <a-tree-select
+            v-model="modalForm[item.key]"
+            style="width: 100%"
+            :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+            :tree-data="selectOptions[item.key]"
+            :replaceFields="{label:item.labelName,value:item.valueName,children:'children'}"
             :placeholder="`请选择${item.label}`"
-            change-on-select
-            @change="selectChange(modalForm[item.key],item)"
-          />
+          ></a-tree-select>
         </a-form-model-item>
         <a-form-model-item v-else-if="item.type=='switch'" :label="item.label" :prop="item.key">
-          <a-switch v-model="modalForm[item.key]" />
+          <a-switch defaultChecked @change="switchChange($event,item.key)" />
+        </a-form-model-item>
+        <a-form-model-item v-else-if="item.type=='upload'" :label="item.label" :prop="item.key">
+          <a-upload
+            name="file"
+            action="/web-api/resource/upload"
+            :headers="headers"
+            @change="handleChange"
+          >
+            <a-button>
+              <a-icon type="upload" />点击上传文件
+            </a-button>
+          </a-upload>
         </a-form-model-item>
         <a-form-model-item
           v-else-if="item.type=='uploadImage'"
@@ -54,17 +66,19 @@
           :prop="item.key"
         >
           <a-upload
-            name="avatar"
+            name="file"
             list-type="picture-card"
             class="avatar-uploader"
+            :headers="headers"
             :show-upload-list="false"
             :before-upload="beforeUpload"
-            @change="handleChange"
+            action="/web-api/resource/upload"
+            @change="handleChange($event,item.key)"
           >
             <img v-if="modalForm[item.key]" :src="modalForm[item.key]" alt="avatar" />
             <div v-else>
               <a-icon :type="loading ? 'loading' : 'plus'" />
-              <div class="ant-upload-text">上传</div>
+              <div class="ant-upload-text">上传图片</div>
             </div>
           </a-upload>
         </a-form-model-item>
@@ -149,60 +163,49 @@ export default {
   data() {
     return {
       title: "编辑表单",
+      headers: {},
       modalForm: {},
       modalRules: {},
       loading: false,
       visible: false,
+      cascaderModels: {},
       selectOptions: {},
-      cascaderOptions: {},
     };
   },
   watch: {
     visibleModal: function (val) {
-      console.log(val);
       this.visible = val;
+      this.initView();
+    },
+    formData: function (val) {
+      this.modalForm = val;
     },
   },
   created() {
     this.formItems.forEach((item) => {
       if (item.rule) Vue.set(this.modalRules, item.key, item.rule);
     });
-    this.modalForm = this.formData ? this.formData : {};
-    var selectItems = this.formItems.filter((item) => {
-      return item.type == "select";
-    });
-    selectItems.forEach((obj) => {
-      if (obj.selectData) {
-        Vue.set(this.selectOptions, obj.key, obj.selectData);
-      } else if (!obj.isSub) {
-        this.querySelectOptions(obj.selectUrl, obj.key, obj.defaultParams);
-      }
-    });
+    this.initView();
   },
   methods: {
-    selectChange(val, obj) {
-      var childrenObj = this.searchDatas.find((item) => {
-        item.key == obj.childrenKey;
-      });
-      if (childrenObj.defaultParams) {
-        Object.getOwnPropertyNames(childrenObj.defaultParams).forEach((key) => {
-          childrenObj.defaultParams[key] = val;
+    initView() {
+      this.formItems
+        .filter((item) => item.type == "select" || item.type == "treeSelect")
+        .forEach((obj) => {
+          if (obj.selectData) {
+            Vue.set(this.selectOptions, obj.key, obj.selectData);
+          } else {
+            this.querySelectOptions(obj.selectUrl, obj.key, obj.defaultParams);
+          }
         });
-      }
-      this.querySelectOptions(
-        childrenObj.selectUrl,
-        childrenObj.key,
-        childrenObj.defaultParams || {}
-      );
     },
     querySelectOptions(url, key, params) {
-      console.log(url);
-      console.log(key); //TUDO 预留请求方法
-      console.log(params);
+      this.$store.dispatch(url, params).then((res) => {
+        this.selectOptions[key] = res.data;
+      });
     },
-    loadData(selectedOptions) {
-      const targetOption = selectedOptions[selectedOptions.length - 1];
-      targetOption.loading = true;
+    switchChange(event, key) {
+      this.modalForm[key] = event ? 0 : 1;
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -225,12 +228,20 @@ export default {
       }
       return isJpgOrPng && isLt2M;
     },
-    handleChange(info) {
-      console.log(info);
+    handleChange({ file }, key) {
+      if (file.status === "uploading") {
+        this.loading = true;
+        return;
+      }
+      if (file.status === "done") {
+        this.modalForm[key] = file.response.data;
+        this.loading = false;
+      }
     },
-    handelCancel(){
-      this.$emit('close')
-    }
+    handelCancel() {
+      this.visible = false;
+      this.$emit("close");
+    },
   },
 };
 </script>
@@ -250,6 +261,10 @@ export default {
   }
   /deep/ .ant-form-item-control {
     width: 90%;
+  }
+  /deep/ img {
+    width: 100px;
+    height: 100px;
   }
 }
 </style>

@@ -1,4 +1,4 @@
-import { queryList, queryInfo, saveRole, updateRole, deleteRole } from '@/api/role'
+import { queryList, querySelect, queryInfo, saveRole, updateRole, deleteRole } from '@/api/role'
 
 const state = {}
 
@@ -11,6 +11,9 @@ const actions = {
                 resolve(response.data)
             });
         })
+    },
+    querySelect({ commit }, params) {
+        return querySelect(params);
     },
     queryInfo({ commit }, id) {
         return queryInfo(id);

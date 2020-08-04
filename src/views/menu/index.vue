@@ -1,108 +1,179 @@
 <template>
   <a-card :loading="loading">
-    <search-bar />
+    <search-bar :searchDatas="searchDatas" :searchhandle="searchhandle" />
     <table-page
       :table-cols="tableCols"
       :table-datas="tableDatas"
       :operationBtns="operationBtns"
       @operationHandel="operationHandel"
     />
-    <pagination :total="total" :limit="10" :page="0" @pagination="paginationHandel" />
+    <modal-form
+      :visibleModal="visibleModal"
+      :formItems="formItems"
+      @submit="submitHandel"
+      @close="visibleModal=false"
+      :formData="formData"
+    />
   </a-card>
 </template>
 <script>
 import SearchBar from "@/components/SearchBar";
 import TablePage from "@/components/TablePage";
-import Pagination from "@/components/Pagination";
+import ModalForm from "@/components/ModalForm";
+
 export default {
   components: {
     SearchBar,
     TablePage,
-    Pagination
+    ModalForm,
   },
   data() {
     return {
       loading: false,
-      tableCols: [
-        { title: "姓名", dataIndex: "name" },
-        { title: "地址", dataIndex: "address" },
+      searchDatas: [
         {
-          title: "状态",
-          dataIndex: "status",
+          key: "name",
+          label: "菜单名称",
+        },
+      ],
+      tableCols: [
+        { title: "菜单名称", dataIndex: "name" },
+        {
+          title: "菜单类型",
+          dataIndex: "type",
           type: "select",
           selectData: [
-            { label: "在线", value: 0 },
-            { label: "离线", value: 1 }
-          ]
+            { label: "菜单", value: 0 },
+            { label: "按钮", value: 1 },
+          ],
+        },
+        { title: "路由", dataIndex: "url" },
+        { title: "排序", dataIndex: "sort" },
+        {
+          title: "状态",
+          dataIndex: "state",
+          type: "select",
+          selectData: [
+            { label: "启用", value: 0 },
+            { label: "停用", value: 1 },
+          ],
         },
         { title: "创建时间", dataIndex: "createTime", type: "dateTime" },
-        {
-          title: "操作",
-          type: "action"
-        }
       ],
       operationBtns: [
         {
           key: "add",
           label: "添加",
           pos: "top",
-          type: "primary"
-        },
-        {
-          key: "export",
-          label: "导出",
-          pos: "top",
-          type: "default"
-        },
-        {
-          key: "Import",
-          label: "导入",
-          pos: "top",
-          type: "default"
+          type: "primary",
         },
         {
           key: "edit",
           label: "编辑",
-          pos: "row"
+          pos: "row",
         },
         {
           key: "delete",
           label: "删除",
           pos: "row",
-          confirm: true
-        }
+          confirm: true,
+        },
       ],
-      tableDatas: [
+      tableDatas: [],
+      formData: {},
+      visibleModal: false,
+      formItems: [
         {
-          key: 1,
-          name: "111",
-          status: 0,
-          address: "London, Park Lane no.",
-          createTime: 1592209572736
+          key: "fid",
+          label: "上级菜单",
+          type: "treeSelect",
+          selectUrl: "menu/querySelect",
+          labelName: "name",
+          valueName: "id",
         },
         {
-          key: 2,
-          name: "222",
-          status: 1,
-          address: "London, Park Lane no.",
-          createTime: 1592209572736
-        }
+          key: "name",
+          label: "菜单名称",
+        },
+        {
+          key: "type",
+          label: "菜单类型",
+          type: "select",
+          selectData: [
+            { label: "菜单", value: 0 },
+            { label: "按钮", value: 1 },
+          ],
+        },
+        {
+          key: "icon",
+          label: "图标",
+        },
+        {
+          key: "url",
+          label: "路由",
+        },
+        {
+          key: "page",
+          label: "页面",
+        },
+        {
+          key: "perms",
+          label: "权限",
+        },
+        {
+          key: "sort",
+          label: "排序",
+          type: "number",
+        },
+        {
+          key: "state",
+          label: "状态",
+          type: "switch",
+        },
       ],
-      total: 2,
-      limit: 10,
-      page: 0
     };
   },
+  created() {
+    this.initData();
+  },
   methods: {
-    operationHandel(record, event) {
-      console.log(record);
-      console.log(event);
+    initData() {
+      this.$store
+        .dispatch("menu/queryList", { page: this.page, limit: this.limit })
+        .then((res) => {
+          this.tableDatas = res.data;
+        });
     },
-    paginationHandel(page, limit) {
-      console.log(page);
-      console.log(limit);
-    }
-  }
+    searchhandle(params) {},
+    operationHandel(row, event) {
+      var vm = this;
+      if (event === "delete") {
+        vm.$confirm({
+          title: "确定要删除此记录吗？",
+          onOk() {
+            vm.$store.dispatch("menu/deleteMenu", row.id).then(() => {
+              vm.$message.success("删除成功！");
+              this.initData();
+            });
+          },
+        });
+      } else if (event === "add") {
+        this.visibleModal = true;
+        this.formData = {};
+      } else if (event === "edit") {
+        this.visibleModal = true;
+        this.formData = row;
+      }
+    },
+    submitHandel(data) {
+      console.log(data);
+      this.$store.dispatch("menu/saveMenu", data).then((res) => {
+        this.$message.success("保存成功！");
+        this.visibleModal = false;
+        this.initData();
+      });
+    },
+  },
 };
 </script>
 <style scoped>

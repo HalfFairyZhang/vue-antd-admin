@@ -8,7 +8,7 @@ const service = axios.create({
   baseURL: "/web-api", //process.env.VUE_APP_BASE_API, // url = base url + request url
   withCredentials: true, // 跨域请求时发送cookies
   timeout: 5000, // 超时时间
-  headers	:{'Content-Type': 'application/json;charset=UTF-8'},
+  headers: { 'Content-Type': 'application/json;charset=UTF-8' },
 })
 
 // request 拦截器（发出请求前处理）
@@ -31,7 +31,7 @@ service.interceptors.response.use(
     const res = response.data
     // 状态码判定
     if (res.code !== 200) {
-      Message.error(res.msg || 'Error', 5 * 1000)
+      Message.error(res.msg || 'Error', 5)
       // 50008: 非法令牌; 50012: 其他客户端登录; 50014: 令牌过期;
       if (res.code === 401 || res.code === 403) {
         Modal.confirm('您已注销，您可以取消以停留在此页，或重新登录', '确认注销', {
@@ -51,7 +51,7 @@ service.interceptors.response.use(
   },
   error => {
     console.log('err' + error) // for debug
-    Message.error("服务器异常", 5 * 1000)
+    Message.error("服务器异常", 5)
     return Promise.reject(error)
   }
 )
