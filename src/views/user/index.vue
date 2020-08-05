@@ -7,7 +7,12 @@
       :operationBtns="operationBtns"
       @operationHandel="operationHandel"
     />
-    <pagination :total="total" :limit="10" :page="0" @pagination="paginationHandel" />
+    <pagination
+      :total="params.total"
+      :limit="params.limit"
+      :page="params.page"
+      @pagination="paginationHandel"
+    />
     <modal-form
       :visibleModal="fromVisible"
       :formItems="formItems"
@@ -55,7 +60,7 @@ export default {
         { title: "创建时间", dataIndex: "createTime", type: "dateTime" },
       ],
       operationBtns: [
-        { key: "add", label: "添加", pos: "top" },
+        { key: "add", label: "添加", pos: "top", type: "primary" },
         { key: "edit", label: "编辑" },
         { key: "delete", label: "删除" },
       ],
@@ -90,10 +95,9 @@ export default {
           valueName: "id",
         },
       ],
+      params: { total: 0, limit: 10, page: 0 },
       tableDatas: [],
       formData: {},
-      total: 0,
-      params: { limit: 10, page: 0 },
       fromVisible: false,
     };
   },
@@ -104,7 +108,7 @@ export default {
     initData() {
       this.$store.dispatch("user/queryUserList", this.params).then((res) => {
         this.tableDatas = res.list;
-        this.total = res.totalCount;
+        this.params.total = res.totalCount;
       });
     },
     searchHandle(params) {

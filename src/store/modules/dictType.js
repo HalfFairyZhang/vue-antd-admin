@@ -1,4 +1,4 @@
-import { queryList, queryInfo, saveDictType, updateDictType, deleteDictType } from '@/api/dictType'
+import { queryList,querySelect, queryInfo, saveDictType, updateDictType, deleteDictType } from '@/api/dictType'
 
 const state = {}
 
@@ -11,6 +11,9 @@ const actions = {
                 resolve(response.data)
             });
         })
+    },
+    querySelect({ commit }, params) {
+        return querySelect(params);
     },
     queryInfo({ commit }, id) {
         return queryInfo(id);

@@ -1,5 +1,5 @@
 <template>
-  <div :class="{'hidden':hidden}" class="search-bar-container">
+  <div class="search-bar-container">
     <a-form-model class="ant-advanced-search-form" rel="form" :model="form">
       <a-row :gutter="24">
         <a-col
@@ -26,9 +26,9 @@
             >
               <a-select-option
                 v-for="option in selectOptions[item.key]"
-                :key="option.valueName?option[option.valueName]:option.value"
-                :value="option.valueName?option[option.valueName]:option.value"
-              >{{option.labelName?option[option.labelName]:option.label}}</a-select-option>
+                :key="item.valueName?option[item.valueName]:option.value"
+                :value="item.valueName?option[item.valueName]:option.value"
+              >{{item.labelName?option[item.labelName]:option.label}}</a-select-option>
             </a-select>
           </a-form-model-item>
           <a-form-model-item
@@ -37,10 +37,9 @@
             :prop="item.key"
           >
             <a-tree-select
-              v-model="modalForm[item.key]"
-              style="width: 100%"
-              :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+              v-model="form[item.key]"
               :tree-data="selectOptions[item.key]"
+              treeDefaultExpandAll
               :replaceFields="{label:item.labelName,value:item.valueName,children:'children'}"
               :placeholder="`请选择${item.label}`"
             ></a-tree-select>
@@ -79,10 +78,6 @@ export default {
       type: Array,
       default: () => [],
     },
-    hidden: {
-      type: Boolean,
-      default: false,
-    },
   },
   computed: {
     count() {
@@ -110,7 +105,7 @@ export default {
   methods: {
     querySelectOptions(url, key, params) {
       this.$store.dispatch(url, params).then((res) => {
-        this.selectOptions[key] = res.data;
+        Vue.set(this.selectOptions, key, res.data);
       });
     },
     handleSearch() {
@@ -129,9 +124,6 @@ export default {
 .search-bar-container {
   background: #fff;
   padding-bottom: 16px;
-}
-.search-bar-container.hidden {
-  display: none;
 }
 
 .ant-advanced-search-form {

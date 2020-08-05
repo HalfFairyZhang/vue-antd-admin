@@ -1,13 +1,18 @@
 <template>
   <a-card :loading="loading">
-    <search-bar :searchItems="searchItems" :searchhandle="searchhandle" />
+    <search-bar :searchItems="searchItems" :searchHandle="searchHandle" />
     <table-page
       :table-cols="tableCols"
       :table-datas="tableDatas"
       :operationBtns="operationBtns"
       @operationHandel="operationHandel"
     />
-    <pagination :total="total" :limit="10" :page="0" @pagination="paginationHandel" />
+    <pagination
+      :total="params.total"
+      :limit="params.limit"
+      :page="params.page"
+      @pagination="paginationHandel"
+    />
     <modal-form
       :visibleModal="fromVisible"
       :formItems="formItems"
@@ -73,14 +78,12 @@ export default {
         { key: "comment", label: "说明" },
         { key: "state", label: "状态", type: "switch" },
       ],
+      params: { total: 0, limit: 10, page: 0 },
       treeParams: {},
+      treeVisible: false,
       tableDatas: [],
       formData: {},
-      total: 0,
-      limit: 10,
-      page: 0,
       fromVisible: false,
-      treeVisible: false,
     };
   },
   watch: {
@@ -100,10 +103,13 @@ export default {
         .dispatch("role/queryList", { page: this.page, limit: this.limit })
         .then((res) => {
           this.tableDatas = res.list;
-          this.total = res.totalCount;
+          this.params.total = res.totalCount;
         });
     },
-    searchhandle(params) {},
+    searchHandle(params) {
+      this.params = { ...this.params, ...params };
+      this.initData();
+    },
     operationHandel(row, event) {
       if (event === "delete") {
         this.$confirm({
@@ -135,8 +141,8 @@ export default {
       }
     },
     paginationHandel(page, limit) {
-      this.page = page;
-      this.limit = limit;
+      this.params.page = page;
+      this.params.limit = limit;
       this.initData();
     },
     submitHandel(data) {
@@ -149,7 +155,6 @@ export default {
         });
     },
     saveHandle(data) {
-      console.log(data)
       this.$store.dispatch("role/updateRole", data).then((res) => {
         this.$message.success("保存成功！");
         this.treeVisible = false;

@@ -86,7 +86,6 @@ export default {
         { key: "sort", label: "排序", type: "number" },
         { key: "state", label: "状态", type: "switch" },
       ],
-
       tableDatas: [],
       formData: {},
       fromVisible: false,

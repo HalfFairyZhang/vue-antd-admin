@@ -26,7 +26,6 @@
             :mode="item.multiple?'multiple':'default'"
             v-model="modalForm[item.key]"
             :placeholder="`请选择${item.label}`"
-            style="width: 195px"
           >
             <a-select-option
               v-for="option in selectOptions[item.key]"
@@ -38,10 +37,9 @@
         <a-form-model-item v-else-if="item.type=='treeSelect'" :label="item.label" :prop="item.key">
           <a-tree-select
             v-model="modalForm[item.key]"
-            style="width: 100%"
-            :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
             :tree-data="selectOptions[item.key]"
             :replaceFields="{label:item.labelName,value:item.valueName,children:'children'}"
+            treeDefaultExpandAll
             :placeholder="`请选择${item.label}`"
           ></a-tree-select>
         </a-form-model-item>
@@ -53,7 +51,7 @@
             name="file"
             action="/web-api/resource/upload"
             :headers="headers"
-            @change="handleChange"
+            @change="handleChange($event,item.key)"
           >
             <a-button>
               <a-icon type="upload" />点击上传文件
