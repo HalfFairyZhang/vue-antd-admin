@@ -11,7 +11,8 @@ import {
     Col, Row, DatePicker,
     Select, TreeSelect, Tree,
     Popconfirm, Modal, Message,
-    Switch, Upload, Cascader
+    Switch, Upload, Cascader,
+    Badge
 } from 'ant-design-vue';
 
 Vue.use(Layout);
@@ -42,6 +43,7 @@ Vue.use(Switch);
 Vue.use(Upload);
 Vue.use(Cascader);
 Vue.use(Tree);
+Vue.use(Badge);
 
 Vue.prototype.$message = Message;
 Vue.prototype.$confirm = Modal.confirm;

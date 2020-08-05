@@ -6,6 +6,7 @@
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
     <div style="flex: 1 1 0%;"></div>
     <div class="antd-vue-components-global-header-index-right">
+      <error-log class="errLog-container right-menu-item hover-effect" />
       <a-dropdown>
         <span
           class="antd-vue-components-global-header-index-action antd-vue-components-global-header-index-account"
@@ -34,13 +35,15 @@
 <script>
 import { mapGetters } from "vuex";
 import Breadcrumb from "@/components/Breadcrumb";
+import ErrorLog from "@/components/ErrorLog";
 
 export default {
   components: {
-    Breadcrumb
+    Breadcrumb,
+    ErrorLog,
   },
   computed: {
-    ...mapGetters(["sidebar", "avatar", "name"])
+    ...mapGetters(["sidebar", "avatar", "name"]),
   },
   methods: {
     toggleSideBar() {
@@ -50,8 +53,8 @@ export default {
       await this.$store.dispatch("user/logout");
       console.log(this.$route.fullPath);
       this.$router.push(`/login?redirect=${this.$route.fullPath}`);
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>
