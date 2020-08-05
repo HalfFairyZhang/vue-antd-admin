@@ -19,16 +19,9 @@ export function filterAsyncRoutes(menus, depth = 0) {
       component: () => import(`@/views/${menu.page}`),
       hidden: menu.type === 1
     }
-    if (!menu.page) {
-      tmp['component'] = Layout
-    }
-    if (menu.children && depth < 1) {
-      tmp['children'] = filterAsyncRoutes(menu.children, depth + 1)
-    }
+    if (!menu.page) tmp['component'] = Layout
+    if (menu.children) tmp['children'] = filterAsyncRoutes(menu.children, depth + 1)
     res.push(tmp)
-    if (menu.children && depth == 1) {
-      res = res.concat(filterAsyncRoutes(menu.children.filter(item => item.url != null), depth + 1))
-    }
   });
   return res;
 }

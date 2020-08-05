@@ -90,7 +90,7 @@ export default {
                 ]
             )
         },
-        renderSubMenu: function (h, menu, pIndex, index) {
+        renderSubMenu: function (h, basePath = undefined, menu, pIndex, index) {
             var vm = this
             var subItem = [h('span',
                 { slot: 'title' },
@@ -102,8 +102,13 @@ export default {
             var itemArr = []
             var pIndex_ = pIndex + '_' + index
             menu.children.forEach(function (item, i) {
-                itemArr.push(vm.renderItem(h, menu.path, item, pIndex_, i))
+                itemArr.push(vm.renderItem(h, basePath ? basePath + "/" + menu.path : menu.path, item, pIndex_, i))
             })
+            //如果子菜单都是隐藏的就直接渲染
+            itemArr = itemArr.filter(val => { return val != undefined })
+            if (itemArr.length <= 0) {
+                return this.renderMenuItem(h, basePath, menu, pIndex, index)
+            }
             return h(
                 SubMenu,
                 { key: menu.path ? menu.path : 'submenu_' + pIndex + '_' + index },
@@ -120,7 +125,7 @@ export default {
         },
         renderItem(h, basePath = undefined, menu, pIndex, index) {
             if (!menu.hidden) {
-                return menu.children ? this.renderSubMenu(h, menu, pIndex, index) : this.renderMenuItem(h, basePath, menu, pIndex, index)
+                return menu.children ? this.renderSubMenu(h, basePath, menu, pIndex, index) : this.renderMenuItem(h, basePath, menu, pIndex, index)
             }
         },
         onOpenChange(openKeys) {

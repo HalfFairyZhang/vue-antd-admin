@@ -19,7 +19,7 @@
     >
       <template slot="action" slot-scope="record">
         <span
-          v-for="(btn,index) in operationBtns.filter(item=>{return item.pos=='row'})"
+          v-for="(btn,index) in operationBtns.filter(item=>{return item.pos!='top'})"
           :key="btn.key"
         >
           <a-divider v-if="index!=0" type="vertical" />

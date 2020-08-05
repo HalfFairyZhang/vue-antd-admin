@@ -35,8 +35,8 @@ service.interceptors.response.use(
       // 50008: 非法令牌; 50012: 其他客户端登录; 50014: 令牌过期;
       if (res.code === 401 || res.code === 403) {
         Modal.confirm('您已注销，您可以取消以停留在此页，或重新登录', '确认注销', {
-          confirmButtonText: '重新登录',
-          cancelButtonText: '取消',
+          okText: '重新登录',
+          cancelText: '取消',
           type: 'warning'
         }).then(() => {
           store.dispatch('user/resetToken').then(() => {

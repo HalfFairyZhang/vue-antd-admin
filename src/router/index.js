@@ -46,65 +46,6 @@ export const constantRoutes = [
                 meta: { title: '仪表盘', icon: 'documentation', affix: true }
             }
         ]
-    },
-    {
-        path: '/documentation',
-        component: Layout,
-        redirect: 'noRedirect',
-        meta: { title: '文档', icon: 'snippets', affix: true },
-        children: [
-            {
-                path: 'index',
-                component: () => import('@/views/documentation/index'),
-                name: 'Documentation',
-                meta: { title: 'Documentation', icon: 'documentation', affix: true }
-            }
-        ]
-    }
-]
-
-export const asyncRoutes = [
-    {
-        path: '/error',
-        component: Layout,
-        redirect: 'noRedirect',
-        name: 'ErrorPages',
-        meta: {
-            title: '错误页面',
-            icon: 'warning'
-        },
-        children: [
-            {
-                path: '500',
-                component: () => import('@/views/error-page/500'),
-                name: 'Page500',
-                meta: { title: '500', noCache: true }
-            },
-            {
-                path: '404',
-                component: () => import('@/views/error-page/404'),
-                name: 'Page404',
-                meta: { title: '404', noCache: true }
-            }
-        ]
-    },
-    {
-        path: '/user',
-        component: Layout,
-        redirect: 'noRedirect',
-        name: 'user',
-        meta: {
-            title: '用户管理',
-            icon: 'user'
-        },
-        children: [
-            {
-                path: 'index',
-                component: () => import('@/views/user/index'),
-                name: 'user',
-                meta: { title: '用户信息', noCache: true }
-            },
-        ]
     }
 ]
 
@@ -116,7 +57,6 @@ const createRouter = () => new Router({
 
 const router = createRouter()
 
-// Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
     const newRouter = createRouter()
     router.matcher = newRouter.matcher // reset router

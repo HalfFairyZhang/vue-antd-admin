@@ -1,6 +1,6 @@
 <template>
   <a-card :loading="loading">
-    <search-bar :searchDatas="searchDatas" :searchhandle="searchhandle" />
+    <search-bar :searchItems="searchItems" @searchHandle="searchHandle" />
     <table-page
       :table-cols="tableCols"
       :table-datas="tableDatas"
@@ -9,10 +9,10 @@
     />
     <pagination :total="total" :limit="10" :page="0" @pagination="paginationHandel" />
     <modal-form
-      :visibleModal="visibleModal"
+      :visibleModal="fromVisible"
       :formItems="formItems"
       @submit="submitHandel"
-      @close="visibleModal=false"
+      @close="fromVisible=false"
       :formData="formData"
     />
   </a-card>
@@ -33,19 +33,10 @@ export default {
   data() {
     return {
       loading: false,
-      searchDatas: [
-        {
-          key: "nickname",
-          label: "昵称",
-        },
-        {
-          key: "username",
-          label: "用户名",
-        },
-        {
-          key: "phone",
-          label: "手机号",
-        },
+      searchItems: [
+        { key: "nickname", label: "昵称" },
+        { key: "username", label: "用户名" },
+        { key: "phone", label: "手机号" },
       ],
       tableCols: [
         { title: "昵称", dataIndex: "nickname" },
@@ -64,94 +55,46 @@ export default {
         { title: "创建时间", dataIndex: "createTime", type: "dateTime" },
       ],
       operationBtns: [
-        {
-          key: "add",
-          label: "添加",
-          pos: "top",
-          type: "primary",
-        },
-        {
-          key: "edit",
-          label: "编辑",
-          pos: "row",
-        },
-        {
-          key: "delete",
-          label: "删除",
-          pos: "row",
-          confirm: true,
-        },
+        { key: "add", label: "添加", pos: "top" },
+        { key: "edit", label: "编辑" },
+        { key: "delete", label: "删除" },
       ],
-      tableDatas: [],
-      formData: {},
-      total: 0,
-      limit: 10,
-      page: 0,
-      visibleModal: false,
       formItems: [
         {
           key: "username",
           label: "用户名",
           rule: [
-            {
-              required: true,
-              message: "请输入用户名！",
-              trigger: "blur",
-            },
+            { required: true, message: "请输入用户名！", trigger: "blur" },
           ],
         },
         {
           key: "password",
           label: "密码",
-          rule: [
-            {
-              required: true,
-              message: "请输入密码！",
-              trigger: "blur",
-            },
-          ],
+          rule: [{ required: true, message: "请输入密码！", trigger: "blur" }],
         },
-        {
-          key: "avatar",
-          label: "头像",
-          type: "uploadImage",
-        },
+        { key: "avatar", label: "头像", type: "uploadImage" },
         {
           key: "nickname",
           label: "昵称",
-          rule: [
-            {
-              required: true,
-              message: "请输入昵称！",
-              trigger: "blur",
-            },
-          ],
+          rule: [{ required: true, message: "请输入昵称！", trigger: "blur" }],
         },
-        {
-          key: "phone",
-          label: "手机号",
-          rule: [
-            {
-              required: true,
-              message: "请输入手机号！",
-              trigger: "blur",
-            },
-          ],
-        },
-        {
-          key: "email",
-          label: "邮箱",
-        },
+        { key: "phone", label: "手机号" },
+        { key: "email", label: "邮箱" },
         {
           key: "roleIdList",
           label: "角色",
           type: "select",
-          multiple:true,
+          multiple: true,
           selectUrl: "role/querySelect",
           labelName: "name",
           valueName: "id",
         },
       ],
+      tableDatas: [],
+      formData: {},
+      total: 0,
+      params: { limit: 10, page: 0 },
+      fromVisible: false,
     };
   },
   created() {
@@ -159,17 +102,14 @@ export default {
   },
   methods: {
     initData() {
-      this.$store
-        .dispatch("user/queryUserList", { page: this.page, limit: this.limit })
-        .then((res) => {
-          this.tableDatas = res.list;
-          this.total = res.totalCount;
-          this.limit = res.pageSize;
-          this.page = res.currPage - 1;
-        });
+      this.$store.dispatch("user/queryUserList", this.params).then((res) => {
+        this.tableDatas = res.list;
+        this.total = res.totalCount;
+      });
     },
-    searchhandle(params) {
-      console.log(params);
+    searchHandle(params) {
+      this.params = { ...this.params, ...params };
+      this.initData();
     },
     operationHandel(row, event) {
       if (event === "delete") {
@@ -182,24 +122,26 @@ export default {
           },
         });
       } else if (event === "add") {
-        this.visibleModal = true;
+        this.fromVisible = true;
         this.formData = {};
       } else if (event === "edit") {
-        this.visibleModal = true;
+        this.fromVisible = true;
         this.formData = row;
       }
     },
     paginationHandel(page, limit) {
-      this.page = page;
-      this.limit = limit;
+      this.params.page = page;
+      this.params.limit = limit;
       this.initData();
     },
     submitHandel(data) {
-      this.$store.dispatch("user/saveUser", data).then((res) => {
-        this.$message.success("保存成功！");
-        this.visibleModal = false;
-        this.initData();
-      });
+      this.$store
+        .dispatch(`user/${data.id ? "update" : "save"}User`, data)
+        .then((res) => {
+          this.$message.success("保存成功！");
+          this.fromVisible = false;
+          this.initData();
+        });
     },
   },
 };

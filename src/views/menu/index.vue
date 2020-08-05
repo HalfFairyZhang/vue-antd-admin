@@ -1,6 +1,6 @@
 <template>
   <a-card :loading="loading">
-    <search-bar :searchDatas="searchDatas" :searchhandle="searchhandle" />
+    <search-bar :searchItems="searchItems" :searchhandle="searchhandle" />
     <table-page
       :table-cols="tableCols"
       :table-datas="tableDatas"
@@ -8,10 +8,10 @@
       @operationHandel="operationHandel"
     />
     <modal-form
-      :visibleModal="visibleModal"
+      :visibleModal="fromVisible"
       :formItems="formItems"
       @submit="submitHandel"
-      @close="visibleModal=false"
+      @close="fromVisible=false"
       :formData="formData"
     />
   </a-card>
@@ -30,12 +30,7 @@ export default {
   data() {
     return {
       loading: false,
-      searchDatas: [
-        {
-          key: "name",
-          label: "菜单名称",
-        },
-      ],
+      searchItems: [{ key: "name", label: "菜单名称" }],
       tableCols: [
         { title: "菜单名称", dataIndex: "name" },
         {
@@ -61,27 +56,10 @@ export default {
         { title: "创建时间", dataIndex: "createTime", type: "dateTime" },
       ],
       operationBtns: [
-        {
-          key: "add",
-          label: "添加",
-          pos: "top",
-          type: "primary",
-        },
-        {
-          key: "edit",
-          label: "编辑",
-          pos: "row",
-        },
-        {
-          key: "delete",
-          label: "删除",
-          pos: "row",
-          confirm: true,
-        },
+        { key: "add", label: "添加", pos: "top", type: "primary" },
+        { key: "edit", label: "编辑" },
+        { key: "delete", label: "删除" },
       ],
-      tableDatas: [],
-      formData: {},
-      visibleModal: false,
       formItems: [
         {
           key: "fid",
@@ -91,10 +69,7 @@ export default {
           labelName: "name",
           valueName: "id",
         },
-        {
-          key: "name",
-          label: "菜单名称",
-        },
+        { key: "name", label: "菜单名称" },
         {
           key: "type",
           label: "菜单类型",
@@ -104,33 +79,17 @@ export default {
             { label: "按钮", value: 1 },
           ],
         },
-        {
-          key: "icon",
-          label: "图标",
-        },
-        {
-          key: "url",
-          label: "路由",
-        },
-        {
-          key: "page",
-          label: "页面",
-        },
-        {
-          key: "perms",
-          label: "权限",
-        },
-        {
-          key: "sort",
-          label: "排序",
-          type: "number",
-        },
-        {
-          key: "state",
-          label: "状态",
-          type: "switch",
-        },
+        { key: "icon", label: "图标" },
+        { key: "url", label: "路由" },
+        { key: "page", label: "页面" },
+        { key: "perms", label: "权限" },
+        { key: "sort", label: "排序", type: "number" },
+        { key: "state", label: "状态", type: "switch" },
       ],
+
+      tableDatas: [],
+      formData: {},
+      fromVisible: false,
     };
   },
   created() {
@@ -158,20 +117,21 @@ export default {
           },
         });
       } else if (event === "add") {
-        this.visibleModal = true;
+        this.fromVisible = true;
         this.formData = {};
       } else if (event === "edit") {
-        this.visibleModal = true;
+        this.fromVisible = true;
         this.formData = row;
       }
     },
     submitHandel(data) {
-      console.log(data);
-      this.$store.dispatch("menu/saveMenu", data).then((res) => {
-        this.$message.success("保存成功！");
-        this.visibleModal = false;
-        this.initData();
-      });
+      this.$store
+        .dispatch(`menu/${data.id ? "update" : "save"}Menu`, data)
+        .then((res) => {
+          this.$message.success("保存成功！");
+          this.fromVisible = false;
+          this.initData();
+        });
     },
   },
 };

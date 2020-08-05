@@ -9,9 +9,9 @@ import {
     Pagination, ConfigProvider,
     Table, Card, Divider,
     Col, Row, DatePicker,
-    Select, TreeSelect,
+    Select, TreeSelect, Tree,
     Popconfirm, Modal, Message,
-    Switch,Upload,Cascader
+    Switch, Upload, Cascader
 } from 'ant-design-vue';
 
 Vue.use(Layout);
@@ -41,6 +41,7 @@ Vue.use(Popconfirm);
 Vue.use(Switch);
 Vue.use(Upload);
 Vue.use(Cascader);
+Vue.use(Tree);
 
 Vue.prototype.$message = Message;
 Vue.prototype.$confirm = Modal.confirm;
