@@ -1,8 +1,5 @@
 /**
- * Created by PanJiaChen on 16/11/18.
- */
-
-/**
+ * 判断是否为外部链接
  * @param {string} path
  * @returns {Boolean}
  */
@@ -11,15 +8,7 @@ export function isExternal(path) {
 }
 
 /**
- * @param {string} str
- * @returns {Boolean}
- */
-export function validUsername(str) {
-  const valid_map = ['admin', 'editor']
-  return valid_map.indexOf(str.trim()) >= 0
-}
-
-/**
+ * 验证URL是否有效
  * @param {string} url
  * @returns {Boolean}
  */
@@ -29,6 +18,7 @@ export function validURL(url) {
 }
 
 /**
+ * 验证是否小写
  * @param {string} str
  * @returns {Boolean}
  */
@@ -38,6 +28,7 @@ export function validLowerCase(str) {
 }
 
 /**
+ * 验证是否大
  * @param {string} str
  * @returns {Boolean}
  */
@@ -47,6 +38,7 @@ export function validUpperCase(str) {
 }
 
 /**
+ * 验证是否全部为字母
  * @param {string} str
  * @returns {Boolean}
  */
@@ -56,6 +48,7 @@ export function validAlphabets(str) {
 }
 
 /**
+ * 验证邮箱格式
  * @param {string} email
  * @returns {Boolean}
  */
@@ -65,6 +58,7 @@ export function validEmail(email) {
 }
 
 /**
+ * 判断String类型
  * @param {string} str
  * @returns {Boolean}
  */
@@ -76,6 +70,7 @@ export function isString(str) {
 }
 
 /**
+ * 判断是否为数组
  * @param {Array} arg
  * @returns {Boolean}
  */

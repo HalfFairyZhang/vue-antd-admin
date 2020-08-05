@@ -1,10 +1,10 @@
 import router from './router'
 import store from './store'
 import { Message } from 'ant-design-vue'
-import { getToken } from '@/utils/auth' // get token from cookie
+import { getToken } from '@/utils/auth'
 import getPageTitle from '@/utils/get-page-title'
-
-const whiteList = ['/login', '/auth-redirect'] // no redirect whitelist
+// 路由白名单
+const whiteList = ['/login', '/auth-redirect'] 
 
 router.beforeEach(async (to, from, next) => {
     document.title = getPageTitle(to.meta.title)

@@ -5,7 +5,7 @@ import { getToken } from '@/utils/auth'
 
 // 创建axios实例
 const service = axios.create({
-  baseURL: "/web-api", //process.env.VUE_APP_BASE_API, // url = base url + request url
+  baseURL: "/api", //process.env.VUE_APP_BASE_API, // url = base url + request url
   withCredentials: true, // 跨域请求时发送cookies
   timeout: 5000, // 超时时间
   headers: { 'Content-Type': 'application/json;charset=UTF-8' },

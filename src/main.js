@@ -4,11 +4,8 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import "./plugins/antd.js";
-import './permission' // permission control
+import './permission' // 权限过滤器
 import { hasPermission } from './utils/permission'
-
-// const { mockXHR } = require('../mock')
-// mockXHR()
 
 Vue.config.productionTip = false
 Vue.prototype.hasPerm = hasPermission

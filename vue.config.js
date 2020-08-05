@@ -14,13 +14,13 @@ module.exports = {
             warnings: false,
             errors: true
         },
-        proxy: {
-            "/web-api": {
+        proxy: { 
+            "/api": {//解决跨域设置代理
                 target: "http://localhost:8020/web-api",
                 changeOrigin: true,
-                pathRewrite: { "^/web-api": "" },
+                pathRewrite: { "^/api": "" },
             },
-            '/upload': {
+            '/upload': {//解决跨域设置代理
                 target: 'http://localhost:8020/web-api',
                 changeOrigin: true,
                 pathRewrite: {

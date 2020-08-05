@@ -1,4 +1,5 @@
 /**
+ * 参数转换params参数转换为JSON
  * @param {string} url
  * @returns {Object}
  */
