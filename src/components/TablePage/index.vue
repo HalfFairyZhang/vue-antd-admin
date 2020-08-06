@@ -2,7 +2,7 @@
   <div>
     <div class="operator">
       <a-button
-        v-for="btn in operationBtns.filter(item=>{return item.pos=='top'})"
+        v-for="btn in operationBtns.filter(item=>{return item.pos=='top'&&(item.perm?hasPerm(item.perm):true)})"
         :key="btn.key"
         :type="btn.type?btn.type:'default'"
         :style="{marginLeft:'8px'}"
@@ -19,7 +19,7 @@
     >
       <template slot="action" slot-scope="record">
         <span
-          v-for="(btn,index) in operationBtns.filter(item=>{return item.pos!='top'})"
+          v-for="(btn,index) in operationBtns.filter(item=>{return item.pos!='top'&&(item.perm?hasPerm(item.perm):true)})"
           :key="btn.key"
         >
           <a-divider v-if="index!=0" type="vertical" />

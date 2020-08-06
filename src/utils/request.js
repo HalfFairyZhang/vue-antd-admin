@@ -3,6 +3,9 @@ import { Modal, Message } from 'ant-design-vue'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 
+//不需要鉴权的接口过滤
+const notAuthUrl = ["/account/login"]
+
 // 创建axios实例
 const service = axios.create({
   baseURL: "/api", //process.env.VUE_APP_BASE_API, // url = base url + request url
@@ -14,7 +17,7 @@ const service = axios.create({
 // request 拦截器（发出请求前处理）
 service.interceptors.request.use(
   config => {
-    if (store.getters.token) {
+    if (store.getters.token && notAuthUrl.indexOf(config.url.request) == -1) {
       config.headers['Authorization'] = getToken()
     }
     return config
