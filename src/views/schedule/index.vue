@@ -1,5 +1,6 @@
 <template>
   <a-card :loading="loading">
+    <search-bar :searchItems="searchItems" @searchHandle="searchHandle" />
     <table-page
       :table-cols="tableCols"
       :table-datas="tableDatas"
@@ -22,12 +23,14 @@
   </a-card>
 </template>
 <script>
+import SearchBar from "@/components/SearchBar";
 import TablePage from "@/components/TablePage";
 import Pagination from "@/components/Pagination";
 import ModalForm from "@/components/ModalForm";
 
 export default {
   components: {
+    SearchBar,
     TablePage,
     Pagination,
     ModalForm,
@@ -35,10 +38,23 @@ export default {
   data() {
     return {
       loading: false,
+      searchItems: [
+        { key: "beanName", label: "任务名称" },
+        { key: "params", label: "参数" },
+      ],
       tableCols: [
-        { title: "名称", dataIndex: "name" },
-        { title: "排序", dataIndex: "sort" },
-        { title: "创建时间", dataIndex: "createTime", type: "dateTime" },
+        { title: "任务名称", dataIndex: "beanName" },
+        { title: "参数", dataIndex: "params" },
+        { title: "运行时间", dataIndex: "cronExpression" },
+        {
+          title: "状态",
+          dataIndex: "state",
+          type: "select",
+          selectData: [
+            { label: "启用", value: 0 },
+            { label: "停用", value: 1 },
+          ],
+        },
       ],
       operationBtns: [
         { key: "add", label: "添加", pos: "top", type: "primary" },
@@ -47,11 +63,28 @@ export default {
       ],
       formItems: [
         {
-          key: "name",
-          label: "名称",
-          rule: [{ required: true, message: "请输入名称！", trigger: "blur" }],
+          key: "beanName",
+          label: "任务名称",
+          rule: [
+            { required: true, message: "请输入任务名称！", trigger: "blur" },
+          ],
         },
-        { key: "sort", label: "排序" },
+        {
+          key: "params",
+          label: "参数",
+          rule: [
+            { required: true, message: "请输入任务参数！", trigger: "blur" },
+          ],
+        },
+        {
+          key: "cronExpression",
+          label: "运行时间",
+          rule: [
+            { required: true, message: "请输入运行时间！", trigger: "blur" },
+          ],
+        },
+        { key: "remark", label: "备注" },
+        { key: "state", label: "状态", type: "switch" },
       ],
       params: { total: 0, limit: 10, page: 0 },
       tableDatas: [],
@@ -64,17 +97,21 @@ export default {
   },
   methods: {
     initData() {
-      this.$store.dispatch("dictType/queryList", this.params).then((res) => {
+      this.$store.dispatch("schedule/queryList", this.params).then((res) => {
         this.tableDatas = res.list;
         this.params.total = res.totalCount;
       });
+    },
+    searchHandle(params) {
+      this.params = { ...this.params, ...params };
+      this.initData();
     },
     operationHandel(row, event) {
       if (event === "delete") {
         this.$confirm({
           title: "确定要删除此记录吗？",
           onOk() {
-            this.$store.dispatch("dictType/deleteDictType", row.id).then(() => {
+            this.$store.dispatch("schedule/deleteSchedule", row.id).then(() => {
               this.$message.success("删除成功！");
             });
           },
@@ -94,7 +131,7 @@ export default {
     },
     submitHandel(data) {
       this.$store
-        .dispatch(`dictType/${data.id ? "update" : "save"}DictType`, data)
+        .dispatch(`schedule/${data.id ? "update" : "save"}Schedule`, data)
         .then((res) => {
           this.$message.success("保存成功！");
           this.fromVisible = false;

@@ -83,7 +83,6 @@ export default {
           vm.$store
             .dispatch("user/login", this.loginForm)
             .then(() => {
-              console.log( this.$router)
               this.$router.push({
                 path: this.redirect || "/",
                 query: this.otherQuery
