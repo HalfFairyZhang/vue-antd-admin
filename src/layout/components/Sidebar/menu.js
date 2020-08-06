@@ -81,7 +81,7 @@ export default {
                 [
                     h(
                         'a',
-                        { attrs: { href: '#' + (basePath ? this.resolvePath(basePath, menu.path) : menu.path) } },
+                        { attrs: isExternal(menu.path) ? { href: menu.path, target: '_blank' } : { href: '#' + (basePath ? this.resolvePath(basePath, menu.path) : menu.path) } },
                         [
                             this.renderIcon(h, menu.meta.icon),
                             h('span', [menu.meta.title])

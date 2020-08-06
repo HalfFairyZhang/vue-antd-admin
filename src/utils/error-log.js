@@ -19,14 +19,9 @@ function checkNeed() {
 }
 
 if (checkNeed()) {
-  Vue.config.errorHandler = function(err, vm, info, a) {
+  Vue.config.errorHandler = function (err, vm, info, a) {
     Vue.nextTick(() => {
-      store.dispatch('errorLog/addErrorLog', {
-        err,
-        vm,
-        info,
-        url: window.location.href
-      })
+      store.dispatch('errorLog/addErrorLog', { err, vm, info, url: window.location.href })
       console.error(err, info)
     })
   }
