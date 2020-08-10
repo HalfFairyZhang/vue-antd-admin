@@ -19,7 +19,6 @@ export function filterAsyncRoutes(menus, depth = 0) {
       component: lazyLoadView(menu.page),
       hidden: menu.type === 1
     }
-    if (!menu.page) tmp['component'] = Layout
     if (menu.children) tmp['children'] = filterAsyncRoutes(menu.children, depth + 1)
     res.push(tmp)
   });
@@ -27,11 +26,14 @@ export function filterAsyncRoutes(menus, depth = 0) {
 }
 
 /**
- * 
- * @param {String} view 
+ * 路由懒加载
+ * @param {page} view 
  */
 export function lazyLoadView(view) {
-  return () => import(`@/views/${view}`);
+  if (!view)
+    return Layout;
+  else
+    return (resolve) => require([`@/views/${view}`], resolve);
 }
 
 /**

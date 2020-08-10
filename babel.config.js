@@ -5,7 +5,8 @@ module.exports = {
   plugins: [
     [
       "import",
-      { libraryName: "ant-design-vue", libraryDirectory: "es", style: true }
+      { libraryName: "ant-design-vue", libraryDirectory: "es", style: true },
+      "syntax-dynamic-import"
     ]
   ]
 }
