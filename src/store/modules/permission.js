@@ -26,7 +26,10 @@ export function filterAsyncRoutes(menus, depth = 0) {
   return res;
 }
 
-// 路由懒加载
+/**
+ * 
+ * @param {String} view 
+ */
 export function lazyLoadView(view) {
   return () => import(`@/views/${view}`);
 }
