@@ -16,7 +16,7 @@ export function filterAsyncRoutes(menus, depth = 0) {
       path: modulePath || "default",
       name: menu.url,
       meta: { title: menu.name, icon: menu.icon, index: '1-1' },
-      component: () => import(`@/views/${menu.page}`),
+      component: lazyLoadView(menu.page),
       hidden: menu.type === 1
     }
     if (!menu.page) tmp['component'] = Layout
@@ -24,6 +24,11 @@ export function filterAsyncRoutes(menus, depth = 0) {
     res.push(tmp)
   });
   return res;
+}
+
+// 路由懒加载
+export function lazyLoadView(view) {
+  return () => import(`@/views/${view}`);
 }
 
 /**

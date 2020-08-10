@@ -8,7 +8,7 @@ const notAuthUrl = ["/account/login"]
 
 // 创建axios实例
 const service = axios.create({
-  baseURL: "/api", //process.env.VUE_APP_BASE_API, // url = base url + request url
+  baseURL: process.env.VUE_APP_BASE_API,
   withCredentials: true, // 跨域请求时发送cookies
   timeout: 5000, // 超时时间
   headers: { 'Content-Type': 'application/json;charset=UTF-8' },
