@@ -11,7 +11,7 @@
     </div>
     <a-table
       :columns="columns"
-      rowKey="id"
+      :rowKey="rowKey"
       bordered
       :data-source="data"
       :loading="loading"
@@ -34,6 +34,10 @@ import moment from "moment"; // 这个moment方法。框架里本来就有引入
 
 export default {
   props: {
+    rowKey:{
+      type:String,
+      default:"id"
+    },
     operationBtns: {
       type: Array,
       default: () => [],
