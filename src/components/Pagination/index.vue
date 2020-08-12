@@ -56,11 +56,11 @@ export default {
   methods: {
     handleSizeChange(current, size) {
       this.$emit("update:limit", size);
-      this.$emit("paginationHandel", { page: this.currentPage, limit: size });
+      this.$emit("pagination", { page: this.currentPage, limit: size });
     },
     handleCurrentChange(page) {
       this.$emit("update:page", page);
-      this.$emit("paginationHandel", { page: page, limit: this.pageSize });
+      this.$emit("pagination", { page: page, limit: this.pageSize });
     }
   }
 };

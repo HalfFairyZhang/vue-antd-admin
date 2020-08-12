@@ -140,7 +140,7 @@ export default {
         });
       }
     },
-    paginationHandel(page, limit) {
+    paginationHandel({page, limit}) {
       this.params.page = page;
       this.params.limit = limit;
       this.initData();
