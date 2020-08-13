@@ -48,9 +48,9 @@
         </a-form-model-item>
         <a-form-model-item v-else-if="item.type=='upload'" :label="item.label" :prop="item.key">
           <a-upload
-            name="file"
-            action="/web-api/resource/upload"
-            :headers="headers"
+            :name="item.name"
+            :action="item.action"
+            :headers="item.headers"
             @change="handleChange($event,item.key)"
           >
             <a-button>
@@ -64,13 +64,13 @@
           :prop="item.key"
         >
           <a-upload
-            name="file"
+            :name="item.name"
             list-type="picture-card"
             class="avatar-uploader"
-            :headers="headers"
             :show-upload-list="false"
             :before-upload="beforeUpload"
-            action="/web-api/resource/upload"
+            :action="item.action"
+            :headers="item.headers"
             @change="handleChange($event,item.key)"
           >
             <img v-if="modalForm[item.key]" :src="modalForm[item.key]" alt="avatar" />

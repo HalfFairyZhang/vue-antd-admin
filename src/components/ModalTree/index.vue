@@ -54,10 +54,25 @@ export default {
       this.$store.dispatch(this.treeParams.queryUrl, {}).then((res) => {
         this.treeListData = res.data;
         this.treeData = this.treeParams.treeData;
-        this.checkedKeys = this.treeData[this.treeParams.field + "List"].map(
-          (item) => item[this.treeParams.key]
+        this.ergodicTree(
+          this.checkedKeys,
+          this.treeData[this.treeParams.field + "List"],
+          this.treeParams.key
         );
       });
+    },
+    //只取子节点ID
+    ergodicTree(checkedKeys, treeData, key) {
+      var vm = this;
+      if (treeData) {
+        treeData.forEach((item) => {
+          if (item.children) {
+            vm.ergodicTree(checkedKeys, item.children, key);
+          } else {
+            checkedKeys.push(item[key]);
+          }
+        });
+      }
     },
     handelCancel() {
       this.visible = false;

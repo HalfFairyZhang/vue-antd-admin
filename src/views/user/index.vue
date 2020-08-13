@@ -77,7 +77,13 @@ export default {
           label: "密码",
           rule: [{ required: true, message: "请输入密码！", trigger: "blur" }],
         },
-        { key: "avatar", label: "头像", type: "uploadImage" },
+        {
+          key: "avatar",
+          label: "头像",
+          type: "uploadImage",
+          action: "/api/resource/upload",
+          name: "file",
+        },
         {
           key: "nickname",
           label: "昵称",
@@ -133,7 +139,7 @@ export default {
         this.formData = row;
       }
     },
-    paginationHandel({page, limit}) {
+    paginationHandel({ page, limit }) {
       this.params.page = page;
       this.params.limit = limit;
       this.initData();

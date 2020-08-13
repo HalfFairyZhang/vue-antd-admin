@@ -27,12 +27,12 @@ module.exports = {
         },
         proxy: {
             "/api": {//解决跨域设置代理
-                target: "http://localhost:8020/web-api",
+                target: "http://192.144.178.204/web-api",
                 changeOrigin: true,
                 pathRewrite: { "^/api": "" },
             },
             '/upload': {//解决跨域设置代理
-                target: 'http://localhost:8020/web-api',
+                target: 'http://192.144.178.204/web-api',
                 changeOrigin: true,
                 pathRewrite: {
                     '^/upload': '/upload'
