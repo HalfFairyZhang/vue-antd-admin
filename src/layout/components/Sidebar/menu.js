@@ -70,7 +70,7 @@ export default {
             return path.resolve(basePath, routePath)
         },
         renderIcon: function (h, icon) {
-            return icon == undefined ? null : h(Icon, { props: { type: icon } })
+            return icon == undefined || icon == '' ? null : h(Icon, { props: { type: icon } })
         },
         renderMenuItem: function (h, basePath, menu, pIndex, index) {
             return h(
