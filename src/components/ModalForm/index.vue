@@ -38,7 +38,7 @@
           <a-tree-select
             v-model="modalForm[item.key]"
             :tree-data="selectOptions[item.key]"
-            :replaceFields="{label:item.labelName,value:item.valueName,children:'children'}"
+            :replaceFields="{label:item.labelName?item.labelName:'label',value:item.valueName?item.valueName:'value',children:'children'}"
             treeDefaultExpandAll
             :placeholder="`请选择${item.label}`"
           ></a-tree-select>
