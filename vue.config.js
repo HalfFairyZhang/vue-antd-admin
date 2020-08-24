@@ -5,9 +5,9 @@ function resolve(dir) {
     return path.join(__dirname, dir)
 }
 
-const name = defaultSettings.title || 'vue ANT Admin' // page title
+const name = defaultSettings.title || 'vue ANT Admin' // 页面标题
 
-const port = process.env.port || process.env.npm_config_port || 8010 // dev port
+const port = process.env.port || process.env.npm_config_port || 8010 // 端口号
 
 module.exports = {
     publicPath: '/',

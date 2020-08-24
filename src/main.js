@@ -5,7 +5,7 @@ import router from './router'
 import store from './store'
 import "./plugins/antd.js";
 import './permission' // 权限过滤器
-import './utils/error-log' // error log
+import './utils/error-log' // 错误日志
 
 import { hasPermission } from './utils/permission'
 

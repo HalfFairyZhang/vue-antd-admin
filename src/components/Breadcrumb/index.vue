@@ -32,17 +32,10 @@ export default {
   },
   methods: {
     getBreadcrumb() {
-      // only show routes with meta.title
+      // 仅显示原路由标题
       let matched = this.$route.matched.filter(
         item => item.meta && item.meta.title
       );
-      //添加一个默认的一级路由
-      // const first = matched[0];
-      // if (!this.isDashboard(first)) {
-      //   matched = [{ path: "/dashboard", meta: { title: "Dashboard" } }].concat(
-      //     matched
-      //   );
-      // }
 
       this.levelList = matched.filter(
         item => item.meta && item.meta.title && item.meta.breadcrumb !== false

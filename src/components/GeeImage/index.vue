@@ -130,7 +130,7 @@ export default {
     loadImage() {
       if (this.$isServer) return;
 
-      // reset status
+      // 重置状态
       this.loading = true;
       this.error = false;
 
@@ -138,8 +138,7 @@ export default {
       img.onload = (e) => this.handleLoad(e, img);
       img.onerror = this.handleError.bind(this);
 
-      // bind html attrs
-      // so it can behave consistently
+      // 绑定属性
       Object.keys(this.$attrs).forEach((key) => {
         const value = this.$attrs[key];
         img.setAttribute(key, value);
@@ -194,7 +193,7 @@ export default {
       this._lazyLoadHandler = null;
     },
     /**
-     * simulate object-fit behavior to compatible with IE11 and other browsers which not support object-fit
+     * 模拟对象适配行为以兼容IE11和其他不支持对象适配的浏览器
      */
     getImageStyle(fit) {
       const { imageWidth, imageHeight } = this;
@@ -226,11 +225,11 @@ export default {
       }
     },
     clickHandler() {
-      // don't show viewer when preview is false
+      // 预览为假时不显示查看器
       if (!this.preview) {
         return;
       }
-      // prevent body scroll
+      // 阻止滚动
       prevOverflow = document.body.style.overflow;
       document.body.style.overflow = "hidden";
       this.showViewer = true;
